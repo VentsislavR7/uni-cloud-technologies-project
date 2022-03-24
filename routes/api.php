@@ -17,7 +17,7 @@ use App\Http\Controllers\TodosController;
 |
 */
 
-Route::get('/login', [ApiController::class, 'login']);
+Route::post('/login', [ApiController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function()
 {

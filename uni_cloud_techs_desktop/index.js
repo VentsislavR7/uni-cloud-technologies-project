@@ -1,0 +1,25 @@
+const { app, BrowserWindow, session } = require("electron");
+
+const path = require("path");
+const url = require("url");
+
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+  });
+
+  win.loadFile(__dirname + "/app/index.html");
+};
+
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});

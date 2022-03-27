@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  submitted = false;
 
   get email() {
     return this.loginForm.controls['email'];
@@ -28,12 +29,17 @@ export class LoginComponent implements OnInit {
 
   onFormSubmit() {
     this.loginForm.markAllAsTouched();
+    this.submitted = true;
 
     if (this.loginForm.status === 'VALID') {
-      this.authService.login(this.email.value, this.password.value).subscribe(
+      this.authService.login(this.email.value, this.password.value).then(
         (val) => {},
         (err) => {
-          alert(err.error.message);
+          if (err.error.message) {
+            alert(err.error.message);
+          } else {
+            alert('Something went wrong!');
+          }
         }
       );
     }

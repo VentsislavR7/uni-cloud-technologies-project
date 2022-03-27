@@ -6,11 +6,15 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export abstract class TodosService extends BaseService {
-  protected readonly todosEndPoint = `${this.baseUrl}/todos`;
-
-  constructor(protected http: HttpClient) {
+  constructor() {
     super();
   }
 
-  abstract getTodos(): Observable<Todo[]>;
+  abstract get(): Promise<Todo[]>;
+
+  abstract create(todo: Todo): Promise<void>;
+
+  abstract update(todo: Todo): Promise<void>;
+
+  abstract delete(id: number): Promise<void>;
 }

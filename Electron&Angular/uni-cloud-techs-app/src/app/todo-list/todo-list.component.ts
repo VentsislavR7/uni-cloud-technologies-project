@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Todo } from '../models/todo.model';
-import { AuthService } from '../services/auth.service';
-import { TodosService } from '../services/todos.service';
+import { Todo } from '../../models/todo.model';
+import { TodosService } from '../../services/todos.service';
 
 @Component({
   selector: 'app-todo-list',
@@ -11,18 +10,35 @@ import { TodosService } from '../services/todos.service';
 export class TodoListComponent implements OnInit {
   todos: Todo[] | null = null;
 
-  constructor(
-    private todosService: TodosService,
-    private authService: AuthService
-  ) {}
-
-  logOut() {
-    this.authService.logout();
-  }
+  constructor(private todosService: TodosService) {}
 
   ngOnInit(): void {
-    this.todosService.getTodos().subscribe((todos) => {
-      this.todos = todos;
+    this.fetchTodos();
+  }
+
+  onTodoCreated() {
+    this.fetchTodos();
+  }
+
+  onTodoUpdated() {
+    this.fetchTodos();
+  }
+
+  onTodoDeleted() {
+    this.fetchTodos();
+  }
+
+  private fetchTodos() {
+    this.todosService.get().then((todos) => {
+      this.todos = todos.sort((left: Todo, right: Todo) => {
+        if (left.completed && right.completed) {
+          return 0;
+        } else if (left.completed) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     });
   }
 }

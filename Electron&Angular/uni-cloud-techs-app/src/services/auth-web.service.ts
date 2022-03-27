@@ -1,29 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseService } from './base-service.service';
 import { tap } from 'rxjs/operators';
+import { AuthResponse } from 'src/models/auth-response.interface';
+import { AuthService } from './auth.service';
 
-interface AuthResponse {
-  token: string;
-}
-
-@Injectable({ providedIn: 'root' })
-export class AuthService extends BaseService {
+@Injectable()
+export class AuthWebService extends AuthService {
   protected readonly loginUrl = `${this.baseUrl}/login`;
 
-  private _token: string | null = null;
-
-  get token() {
-    return this._token;
-  }
-
-  get isLoggedIn() {
-    return !!this._token;
-  }
-
-  constructor(private http: HttpClient, private router: Router) {
-    super();
+  constructor(private http: HttpClient, protected router: Router) {
+    super(router);
   }
 
   login(email: string, password: string) {
@@ -43,10 +30,11 @@ export class AuthService extends BaseService {
 
           this.router.navigate(['']);
         })
-      );
+      )
+      .toPromise();
   }
 
-  tryAutoLogin() {
+  async tryAutoLogin() {
     this._token = sessionStorage.getItem('uct-auth');
 
     if (this._token) {
@@ -54,7 +42,7 @@ export class AuthService extends BaseService {
     }
   }
 
-  logout() {
+  async logout() {
     this._token = null;
     sessionStorage.removeItem('uct-auth');
 

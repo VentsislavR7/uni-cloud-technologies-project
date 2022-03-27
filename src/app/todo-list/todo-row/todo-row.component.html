@@ -1,0 +1,40 @@
+<form
+  [formGroup]="form"
+  (ngSubmit)="saveTodo()"
+  *ngIf="todo"
+  class="flex p-3 border my-3 rounded-md"
+>
+  <div class="flex flex-1 items-center">
+    <input type="checkbox" name="completed" formControlName="completed" />
+    <input
+      type="text"
+      name="title"
+      formControlName="title"
+      class="border-none w-full mx-2"
+    />
+  </div>
+  <div class="flex items-center space-x-2">
+    <button
+      *ngIf="!isEditing"
+      type="button"
+      class="hover:underline text-blue-600"
+      (click)="toggleEditing()"
+    >
+      Edit
+    </button>
+    <button
+      *ngIf="isEditing"
+      type="submit"
+      class="hover:underline text-blue-600"
+    >
+      Save
+    </button>
+    <button
+      type="button"
+      class="hover:underline text-red-600"
+      (click)="deleteTodo()"
+    >
+      Delete
+    </button>
+  </div>
+</form>

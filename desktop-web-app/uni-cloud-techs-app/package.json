@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "deploy": "ng build --aot --base-href ./index.html --output-path ../uni_cloud_techs_desktop/app",
     "test": "ng test"
   },
   "private": true,

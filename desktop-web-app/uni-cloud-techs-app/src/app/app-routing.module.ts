@@ -1,9 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ElectronAPI } from 'src/models/electron-api.interface';
 import { AuthGuard } from '../guards/auth.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
+
+const electronApi = (<any>window).electronAPI as ElectronAPI;
 
 const routes: Routes = [
   {
@@ -17,7 +20,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: !!electronApi })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

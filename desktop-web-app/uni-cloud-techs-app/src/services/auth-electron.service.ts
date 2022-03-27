@@ -10,7 +10,15 @@ export class AuthElectronService extends AuthService {
   }
 
   async login(email: string, password: string): Promise<AuthResponse> {
-    return await this.electron.login(email, password);
+    const data = (await this.electron.login(email, password)) as AuthResponse;
+
+    if (data.token) {
+      this._token = data.token;
+      this.electron.setToken(this._token);
+      this.router.navigate(['']);
+    }
+
+    return data;
   }
 
   async tryAutoLogin() {

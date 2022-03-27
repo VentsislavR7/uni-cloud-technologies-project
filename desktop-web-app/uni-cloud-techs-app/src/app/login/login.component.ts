@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.email.value, this.password.value).then(
         (val) => {},
         (err) => {
-          if (err.error.message) {
+          if (err && err.error && err.error.message) {
             alert(err.error.message);
           } else {
             alert('Something went wrong!');

@@ -10,12 +10,18 @@ export class TodosElectronService extends TodosService {
   }
 
   async get(): Promise<Todo[]> {
-    return [];
+    return this.electron.get();
   }
 
-  async create(todo: Todo): Promise<void> {}
+  async create(todo: Todo): Promise<void> {
+    return this.electron.create(todo);
+  }
 
-  async update(todo: Todo): Promise<void> {}
+  async update(todo: Todo): Promise<void> {
+    return this.electron.update(todo);
+  }
 
-  async delete(id: number): Promise<void> {}
+  async delete(id: number): Promise<void> {
+    return this.electron.delete(id);
+  }
 }

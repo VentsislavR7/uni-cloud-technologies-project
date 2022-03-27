@@ -23,33 +23,6 @@
       </p>
     </div>
 
-    <div
-      role="alert"
-      *ngIf="
-        submitted && loginForm.touched && (email.errors || password.errors)
-      "
-    >
-      <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-        Errors
-      </div>
-      <div
-        class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700"
-      >
-        <div *ngIf="email.errors && email.errors['required']">
-          Email is required
-        </div>
-        <div *ngIf="email.errors && email.errors['email']">
-          Must be proper email format
-        </div>
-        <div *ngIf="password.errors && password.errors['required']">
-          Password is required
-        </div>
-        <div *ngIf="password.errors && password.errors['minlength']">
-          Password must be minimum 8 characters
-        </div>
-      </div>
-    </div>
-
     <form
       [formGroup]="loginForm"
       (ngSubmit)="onFormSubmit()"
@@ -83,21 +56,6 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between">
-        <div class="flex items-center">
-          <input
-            id="remember-me"
-            name="remember-me"
-            type="checkbox"
-            formControlName="rememberMe"
-            class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-            Remember me
-          </label>
-        </div>
-      </div>
-
       <div>
         <button
           type="submit"
@@ -122,5 +80,32 @@
         </button>
       </div>
     </form>
+
+    <div
+      role="alert"
+      *ngIf="
+        submitted && loginForm.touched && (email.errors || password.errors)
+      "
+    >
+      <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+        Errors
+      </div>
+      <div
+        class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700"
+      >
+        <div *ngIf="email.errors && email.errors['required']">
+          Email is required
+        </div>
+        <div *ngIf="email.errors && email.errors['email']">
+          Must be proper email format
+        </div>
+        <div *ngIf="password.errors && password.errors['required']">
+          Password is required
+        </div>
+        <div *ngIf="password.errors && password.errors['minlength']">
+          Password must be minimum 8 characters
+        </div>
+      </div>
+    </div>
   </div>
 </div>

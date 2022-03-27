@@ -1,32 +1,53 @@
-const { ipcMain } = require("electron");
-let https;
+exports.registerFunctions = () => {
+    const { ipcMain, dialog } = require("electron");
+    const axios = require("axios");
+    const constants = require("../constants");
+    const authData = require("../auth.data");
 
-try {
-    https = require("https");
-} catch (err) {
-    console.log("https support is disabled!");
-    console.log(err);
-}
-
-ipcMain.handle("auth:login", (email, password) => {
-    const request = https.request({
-        method: "POST",
-        protocol: "https",
-        hostname: "http://cloud-technologies-project.herokuapp.com",
-        path: "/api/login",
+    ipcMain.handle("auth:login", async (event, email, password) => {
+        const data = await axios
+            .post(
+                `${constants.baseUrl}/login`,
+                JSON.stringify({
+                    email: email,
+                    password: password,
+                })
+            )
+            .then((response) => {
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+                dialog.showErrorBox("Error logging in", "Invalid credentials!");
+                return null;
+            });
+        return data;
     });
-    request.write(
-        JSON.stringify({
-            email: email,
-            password: password,
-        })
-    );
 
-    request.on("response", (response) => {
-        console.log(response);
+    ipcMain.handle("auth:tryGetToken", (event) => {
+        const fs = require("fs");
 
-        response.on("data", (data) => {
-            console.log(data);
-        });
+        if (!fs.existsSync("auth-token.txt")) {
+            authData.authToken = null;
+            return null;
+        }
+
+        const token = fs.readFileSync("auth-token.txt").toString();
+        authData.authToken = token;
+
+        return token;
     });
-});
+
+    ipcMain.handle("auth:setToken", (event, token) => {
+        const fs = require("fs");
+
+        if (!token) {
+            fs.unlinkSync("auth-token.txt");
+            authData.authToken = null;
+            return;
+        }
+
+        fs.writeFileSync("auth-token.txt", token);
+        authData.authToken = token;
+    });
+};

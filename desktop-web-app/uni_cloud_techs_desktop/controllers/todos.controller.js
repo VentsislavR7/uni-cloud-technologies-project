@@ -1,13 +1,60 @@
-const { ipcMain } = require("electron");
-let https;
+exports.registerFunctions = () => {
+    const { ipcMain } = require("electron");
+    const axios = require("axios");
+    const constants = require("../constants");
 
-try {
-    https = require("https");
-} catch (err) {
-    console.log("https support is disabled!");
-    console.log(err);
-}
+    ipcMain.handle("todos:get", async (event) => {
+        const data = await axios
+            .get(`${constants.baseUrl}/todos`)
+            .then((response) => {
+                return response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+                return null;
+            });
 
-ipcMain.handle("todos:get", () => {
-    return "";
-});
+        console.log(data);
+
+        return data;
+    });
+
+    ipcMain.handle("todos:create", async (event, todo) => {
+        await axios
+            .post(`${constants.baseUrl}/todos`, JSON.stringify(todo))
+            .then((response) => {
+                return true;
+            })
+            .catch((err) => {
+                console.log(err);
+                return false;
+            });
+    });
+
+    ipcMain.handle("todos:update", async (event, todo) => {
+        await axios
+            .put(`${constants.baseUrl}/todos/${todo.id}`, JSON.stringify(todo))
+            .then((response) => {
+                return true;
+            })
+            .catch((err) => {
+                console.log(err);
+                return false;
+            });
+    });
+
+    ipcMain.handle("todos:delete", async (event, id) => {
+        await axios
+            .delete(
+                `${constants.baseUrl}/todos/${id}`,
+                JSON.stringify({ id: id })
+            )
+            .then((response) => {
+                return true;
+            })
+            .catch((err) => {
+                console.log(err);
+                return false;
+            });
+    });
+};
